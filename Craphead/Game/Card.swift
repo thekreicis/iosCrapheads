@@ -140,10 +140,17 @@ class Deck {
     init (ownersName: String){
         self.owner = ownersName
     }
+
+    func deleteStack()  {
+        for i in self.cards {
+            i.removeFromParent()
+        }
+        self.cards.removeAll()
+    }
     
     func addCard(card: Card){
         card.owner = self.owner
-        cards.append(card)
+        self.cards.append(card)
     }
     
     func getCard() -> Card{
@@ -156,6 +163,10 @@ class Deck {
     
     func size() -> Int {
         return cards.count
+    }
+    
+    func getOwner() -> String {
+        return self.owner
     }
     
     func shuffle(){
@@ -187,21 +198,25 @@ class Rules {
     
     func putOnTable(player_card: Card, on_top_card: Card) ->Bool
     {
+        print("PLY DMG: \(player_card.dmg()) vs TOP_CARD DMG \(on_top_card.dmg())")
+        
         let player_has_super_card = isSuperCard(card: player_card);
+        if(player_has_super_card == true){
+            return true
+        }
+                
+        if(on_top_card.dmg() == TWO){
+            return true
+        }
 
+        
         if(on_top_card.dmg() == SEVEN){
             if(player_has_super_card || (player_card.dmg() <= 7 && player_card.dmg() > 0) ){
                 return true
             }
             return false
         }
-        if(on_top_card.dmg() == TWO){
-            return true
-        }
-        
-        if(player_has_super_card || player_card.dmg() != SEVEN){
-            return true
-        }
+
         
         if(player_card.dmg() >= on_top_card.dmg()){
             return true
@@ -224,3 +239,4 @@ class Rules {
     let KING = 13
     let ACE = 14
 }
+
